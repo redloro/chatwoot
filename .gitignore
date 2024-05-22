@@ -32,6 +32,10 @@ master.key
 
 public/uploads
 public/packs*
+public/assets/*.json
+public/assets/*.js
+public/assets/*.gz
+public/assets/*.css
 
 # VIM files
 *.swp
