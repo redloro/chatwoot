@@ -1,12 +1,8 @@
 class Webhooks::SmsEventsJob < ApplicationJob
   queue_as :default
 
-  SUPPORTED_EVENTS = %w[message-received message-delivered message-failed].freeze
-
   def perform(params = {})
-    return unless SUPPORTED_EVENTS.include?(params[:type])
-
-    channel = Channel::Sms.find_by(phone_number: params[:to])
+    channel = Channel::Sms.find_by(phone_number: e164_phone_number(params[:phone_number]))
     return unless channel
 
     process_event_params(channel, params)
@@ -14,15 +10,17 @@ class Webhooks::SmsEventsJob < ApplicationJob
 
   private
 
+  def e164_phone_number(phone_number)
+    TelephoneNumber.parse(phone_number).e164_number
+  end
+
   def process_event_params(channel, params)
-    if delivery_event?(params)
-      Sms::DeliveryStatusService.new(channel: channel, params: params[:message].with_indifferent_access).perform
+    case channel.provider
+    when 'dialpad'
+      Webhooks::SmsDialpadEventsJob.perform_later(channel, params)
     else
-      Sms::IncomingMessageService.new(inbox: channel.inbox, params: params[:message].with_indifferent_access).perform
+      Webhooks::SmsBandwidthEventsJob.perform_later(channel, params)
     end
   end
 
-  def delivery_event?(params)
-    params[:type] == 'message-delivered' || params[:type] == 'message-failed'
-  end
 end

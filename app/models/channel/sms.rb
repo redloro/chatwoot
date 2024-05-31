@@ -19,8 +19,12 @@ class Channel::Sms < ApplicationRecord
   include Channelable
 
   self.table_name = 'channel_sms'
-  EDITABLE_ATTRS = [:phone_number, { provider_config: {} }].freeze
+  EDITABLE_ATTRS = [:phone_number, :provider, { provider_config: {} }].freeze
 
+  # default at the moment is bandwidth lets change later.
+  PROVIDERS = %w[default dialpad].freeze
+
+  validates :provider, inclusion: { in: PROVIDERS }
   validates :phone_number, presence: true, uniqueness: true
   # before_save :validate_provider_config
 
@@ -28,57 +32,15 @@ class Channel::Sms < ApplicationRecord
     'Sms'
   end
 
-  # all this should happen in provider service . but hack mode on
-  def api_base_path
-    'https://messaging.bandwidth.com/api/v2'
+  def provider_service
+    if provider == 'dialpad'
+      Sms::Providers::SmsDialpadService.new(sms_channel: self)
+    else
+      Sms::Providers::SmsBandwidthService.new(sms_channel: self)
+    end
   end
 
-  def send_message(contact_number, message)
-    body = message_body(contact_number, message.content)
-    body['media'] = message.attachments.map(&:download_url) if message.attachments.present?
-
-    send_to_bandwidth(body)
-  end
-
-  def send_text_message(contact_number, message_content)
-    body = message_body(contact_number, message_content)
-    send_to_bandwidth(body)
-  end
-
-  private
-
-  def message_body(contact_number, message_content)
-    {
-      'to' => contact_number,
-      'from' => phone_number,
-      'text' => message_content,
-      'applicationId' => provider_config['application_id']
-    }
-  end
-
-  def send_to_bandwidth(body)
-    response = HTTParty.post(
-      "#{api_base_path}/users/#{provider_config['account_id']}/messages",
-      basic_auth: bandwidth_auth,
-      headers: { 'Content-Type' => 'application/json' },
-      body: body.to_json
-    )
-
-    response.success? ? response.parsed_response['id'] : nil
-  end
-
-  def bandwidth_auth
-    { username: provider_config['api_key'], password: provider_config['api_secret'] }
-  end
-
-  # Extract later into provider Service
-  # let's revisit later
-  def validate_provider_config
-    response = HTTParty.post(
-      "#{api_base_path}/users/#{provider_config['account_id']}/messages",
-      basic_auth: bandwidth_auth,
-      headers: { 'Content-Type': 'application/json' }
-    )
-    errors.add(:provider_config, 'error setting up') unless response.success?
-  end
+  delegate :send_message, to: :provider_service
+  delegate :send_text_message, to: :provider_service
+  #delegate :validate_provider_config, to: :provider_service
 end
