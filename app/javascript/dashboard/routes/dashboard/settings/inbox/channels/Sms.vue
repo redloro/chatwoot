@@ -10,16 +10,20 @@
       <label>
         {{ $t('INBOX_MGMT.ADD.SMS.PROVIDERS.LABEL') }}
         <select v-model="provider">
+          <option value="default">
+            {{ $t('INBOX_MGMT.ADD.SMS.PROVIDERS.BANDWIDTH') }}
+          </option>
+          <option value="dialpad">
+            {{ $t('INBOX_MGMT.ADD.SMS.PROVIDERS.DIALPAD') }}
+          </option>
           <option value="twilio">
             {{ $t('INBOX_MGMT.ADD.SMS.PROVIDERS.TWILIO') }}
-          </option>
-          <option value="360dialog">
-            {{ $t('INBOX_MGMT.ADD.SMS.PROVIDERS.BANDWIDTH') }}
           </option>
         </select>
       </label>
     </div>
     <twilio v-if="provider === 'twilio'" type="sms" />
+    <dialpad-sms v-else-if="provider === 'dialpad'" />
     <bandwidth-sms v-else />
   </div>
 </template>
@@ -27,13 +31,15 @@
 <script>
 import PageHeader from '../../SettingsSubPageHeader.vue';
 import BandwidthSms from './BandwidthSms.vue';
+import DialpadSms from './DialpadSms.vue';
 import Twilio from './Twilio.vue';
 
 export default {
   components: {
     PageHeader,
-    Twilio,
     BandwidthSms,
+    DialpadSms,
+    Twilio,
   },
   data() {
     return {
