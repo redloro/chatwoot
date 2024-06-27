@@ -137,16 +137,12 @@ export default {
 };
 </script>
 <style scoped lang="scss">
-::v-deep {
-  .ProseMirror-menubar {
-    @apply rounded-tl-[4px];
-  }
+.message-editor {
+  @apply px-3;
 
-  .ProseMirror-woot-style {
-    @apply min-h-[12.5rem];
-
-    p {
-      @apply text-base;
+  ::v-deep {
+    .ProseMirror-menubar {
+      @apply rounded-tl-[4px];
     }
   }
 }
