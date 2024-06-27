@@ -30,6 +30,7 @@
               :enable-variables="true"
               :enable-canned-responses="false"
               :placeholder="$t('CANNED_MGMT.ADD.FORM.CONTENT.PLACEHOLDER')"
+              :show-image-resize-toolbar="true"
               @blur="$v.content.$touch"
             />
           </div>
@@ -135,7 +136,7 @@ export default {
 <style scoped lang="scss">
 ::v-deep {
   .ProseMirror-menubar {
-    @apply hidden;
+    @apply rounded-tl-[4px];
   }
 
   .ProseMirror-woot-style {

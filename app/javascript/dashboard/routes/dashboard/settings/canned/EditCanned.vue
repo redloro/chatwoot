@@ -139,7 +139,7 @@ export default {
 <style scoped lang="scss">
 ::v-deep {
   .ProseMirror-menubar {
-    @apply hidden;
+    @apply rounded-tl-[4px];
   }
 
   .ProseMirror-woot-style {
