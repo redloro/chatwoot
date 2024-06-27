@@ -74,6 +74,7 @@
       />
       <woot-message-editor
         v-else
+        ref="messageEditorInput"
         v-model="message"
         :editor-id="editorStateId"
         class="input"
@@ -86,6 +87,7 @@
         :signature="signatureToApply"
         :allow-signature="true"
         :channel-type="channelType"
+        :show-image-resize-toolbar="true"
         @typing-off="onTypingOff"
         @typing-on="onTypingOn"
         @focus="onFocus"
@@ -751,6 +753,9 @@ export default {
         isEditorHotKeyEnabled(this.uiSettings, selectedKey)
       );
     },
+    isAttachmentImage(fileType) {
+      return "image/png, image/jpeg, image/jpg, image/gif, image/webp".includes(fileType);
+    },
     onPaste(e) {
       const data = e.clipboardData.files;
       if (!this.showRichContentEditor && data.length !== 0) {
@@ -761,7 +766,11 @@ export default {
       }
       data.forEach(file => {
         const { name, type, size } = file;
-        this.onFileUpload({ name, type, size, file: file });
+        if (this.showRichContentEditor && this.isAttachmentImage(file.type)) {
+          this.$refs.messageEditorInput.uploadImageToStorage(file);
+        } else {
+          this.onFileUpload({ name, type, size, file: file });
+        }
       });
     },
     toggleUserMention(currentMentionState) {

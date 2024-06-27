@@ -629,11 +629,6 @@ export default {
         if (fileUrl) {
           this.onImageInsertInEditor(fileUrl);
         }
-        this.showAlert(
-          this.$t(
-            'PROFILE_SETTINGS.FORM.MESSAGE_SIGNATURE_SECTION.IMAGE_UPLOAD_SUCCESS'
-          )
-        );
       } catch (error) {
         this.showAlert(
           this.$t(
