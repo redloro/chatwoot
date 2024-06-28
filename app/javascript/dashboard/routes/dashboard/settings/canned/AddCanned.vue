@@ -22,17 +22,19 @@
           <label :class="{ error: $v.content.$error }">
             {{ $t('CANNED_MGMT.ADD.FORM.CONTENT.LABEL') }}
           </label>
-          <div class="editor-wrap">
-            <woot-message-editor
-              v-model="content"
-              class="message-editor [&>div]:px-1"
-              :class="{ editor_warning: $v.content.$error }"
-              :enable-variables="true"
-              :enable-canned-responses="false"
-              :placeholder="$t('CANNED_MGMT.ADD.FORM.CONTENT.PLACEHOLDER')"
-              :show-image-resize-toolbar="true"
-              @blur="$v.content.$touch"
-            />
+          <div>
+            <div class="editor-wrap">
+              <woot-message-editor
+                v-model="content"
+                class="message-editor [&>div]:px-1"
+                :class="{ editor_warning: $v.content.$error }"
+                :enable-variables="true"
+                :enable-canned-responses="false"
+                :placeholder="$t('CANNED_MGMT.ADD.FORM.CONTENT.PLACEHOLDER')"
+                :show-image-resize-toolbar="true"
+                @blur="$v.content.$touch"
+              />
+            </div>
           </div>
         </div>
         <div class="flex flex-row justify-end gap-2 py-2 px-0 w-full">
