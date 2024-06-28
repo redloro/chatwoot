@@ -27,6 +27,7 @@
               :enable-variables="true"
               :enable-canned-responses="false"
               :placeholder="$t('CANNED_MGMT.EDIT.FORM.CONTENT.PLACEHOLDER')"
+              :show-image-resize-toolbar="true"
               @blur="$v.content.$touch"
             />
           </div>
