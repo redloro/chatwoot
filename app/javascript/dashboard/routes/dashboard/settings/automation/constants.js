@@ -577,6 +577,11 @@ export const AUTOMATION_ACTION_TYPES = [
     inputType: 'email',
   },
   {
+    key: 'delete_contact',
+    label: 'Delete contact',
+    inputType: null,
+  },
+  {
     key: 'mute_conversation',
     label: 'Mute conversation',
     inputType: null,
@@ -589,6 +594,11 @@ export const AUTOMATION_ACTION_TYPES = [
   {
     key: 'resolve_conversation',
     label: 'Resolve conversation',
+    inputType: null,
+  },
+  {
+    key: 'delete_conversation',
+    label: 'Delete conversation',
     inputType: null,
   },
   {
