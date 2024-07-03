@@ -4,6 +4,12 @@ class ActionService
   def initialize(conversation)
     @conversation = conversation.reload
     @account = @conversation.account
+    @contact = @conversation.contact
+  end
+
+  def delete_contact(_params)
+    @conversation.destroy!
+    @contact.destroy!
   end
 
   def mute_conversation(_params)
@@ -16,6 +22,10 @@ class ActionService
 
   def resolve_conversation(_params)
     @conversation.resolved!
+  end
+
+  def delete_conversation(_params)
+    @conversation.destroy!
   end
 
   def change_status(status)

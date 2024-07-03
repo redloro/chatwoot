@@ -88,6 +88,11 @@ export const AUTOMATIONS = {
         attributeI18nKey: 'SEND_EMAIL_TRANSCRIPT',
       },
       {
+        key: 'delete_contact',
+        name: 'Delete contact',
+        attributeI18nKey: 'DELETE_CONTACT',
+      },
+      {
         key: 'mute_conversation',
         name: 'Mute conversation',
         attributeI18nKey: 'MUTE_CONVERSATION',
@@ -102,6 +107,11 @@ export const AUTOMATIONS = {
         key: 'resolve_conversation',
         name: 'Resolve conversation',
         attributeI18nKey: 'RESOLVE_CONVERSATION',
+      },
+      {
+        key: 'delete_conversation',
+        name: 'Delete conversation',
+        attributeI18nKey: 'DELETE_CONVERSATION',
       },
       {
         key: 'send_webhook_event',
@@ -220,6 +230,11 @@ export const AUTOMATIONS = {
         attributeI18nKey: 'SEND_EMAIL_TRANSCRIPT',
       },
       {
+        key: 'delete_contact',
+        name: 'Delete contact',
+        attributeI18nKey: 'DELETE_CONTACT',
+      },
+      {
         key: 'mute_conversation',
         name: 'Mute conversation',
         attributeI18nKey: 'MUTE_CONVERSATION',
@@ -233,6 +248,11 @@ export const AUTOMATIONS = {
         key: 'resolve_conversation',
         name: 'Resolve conversation',
         attributeI18nKey: 'RESOLVE_CONVERSATION',
+      },
+      {
+        key: 'delete_conversation',
+        name: 'Delete conversation',
+        attributeI18nKey: 'DELETE_CONVERSATION',
       },
       {
         key: 'send_webhook_event',
@@ -365,6 +385,11 @@ export const AUTOMATIONS = {
         attributeI18nKey: 'SEND_EMAIL_TRANSCRIPT',
       },
       {
+        key: 'delete_contact',
+        name: 'Delete contact',
+        attributeI18nKey: 'DELETE_CONTACT',
+      },
+      {
         key: 'mute_conversation',
         name: 'Mute conversation',
         attributeI18nKey: 'MUTE_CONVERSATION',
@@ -378,6 +403,11 @@ export const AUTOMATIONS = {
         key: 'resolve_conversation',
         name: 'Resolve conversation',
         attributeI18nKey: 'RESOLVE_CONVERSATION',
+      },
+      {
+        key: 'delete_conversation',
+        name: 'Delete conversation',
+        attributeI18nKey: 'DELETE_CONVERSATION',
       },
       {
         key: 'send_webhook_event',
@@ -577,6 +607,11 @@ export const AUTOMATION_ACTION_TYPES = [
     inputType: 'email',
   },
   {
+    key: 'delete_contact',
+    label: 'Delete contact',
+    inputType: null,
+  },
+  {
     key: 'mute_conversation',
     label: 'Mute conversation',
     inputType: null,
@@ -589,6 +624,11 @@ export const AUTOMATION_ACTION_TYPES = [
   {
     key: 'resolve_conversation',
     label: 'Resolve conversation',
+    inputType: null,
+  },
+  {
+    key: 'delete_conversation',
+    label: 'Delete conversation',
     inputType: null,
   },
   {

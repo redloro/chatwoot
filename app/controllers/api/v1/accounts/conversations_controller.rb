@@ -40,6 +40,11 @@ class Api::V1::Accounts::ConversationsController < Api::V1::Accounts::BaseContro
     @conversation.update!(permitted_update_params)
   end
 
+  def destroy
+    @conversation.destroy!
+    head :ok
+  end
+
   def filter
     result = ::Conversations::FilterService.new(params.permit!, current_user).perform
     @conversations = result[:conversations]

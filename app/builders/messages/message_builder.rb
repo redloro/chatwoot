@@ -133,12 +133,14 @@ class Messages::MessageBuilder
   end
 
   def message_sender
-    return if @params[:sender_type] != 'AgentBot'
-
-    AgentBot.where(account_id: [nil, @conversation.account.id]).find_by(id: @params[:sender_id])
+    return @conversation.account.users.find_by(id: @params[:sender_id]) if @params[:sender_type] == 'Agent'
+    return AgentBot.where(account_id: [nil, @conversation.account.id]).find_by(id: @params[:sender_id]) if @params[:sender_type] == 'AgentBot'
   end
 
   def message_params
+    created_at = @params[:created_at].present? ? { created_at: @params[:created_at] } : {}
+    updated_at = @params[:updated_at].present? ? { updated_at: @params[:updated_at] } : {}
+
     {
       account_id: @conversation.account_id,
       inbox_id: @conversation.inbox_id,
@@ -151,6 +153,6 @@ class Messages::MessageBuilder
       in_reply_to: @in_reply_to,
       echo_id: @params[:echo_id],
       source_id: @params[:source_id]
-    }.merge(external_created_at).merge(automation_rule_id).merge(campaign_id).merge(template_params)
+    }.merge(external_created_at).merge(automation_rule_id).merge(campaign_id).merge(template_params).merge(created_at).merge(updated_at)
   end
 end

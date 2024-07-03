@@ -132,6 +132,8 @@ const validateSingleAction = action => {
     'snooze_conversation',
     'resolve_conversation',
     'remove_assigned_team',
+    'delete_conversation',
+    'delete_contact',
   ];
 
   if (
