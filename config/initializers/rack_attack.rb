@@ -46,6 +46,10 @@ class Rack::Attack
   #
   # Key: "rack::attack:#{Time.now.to_i/:period}:req/ip:#{req.ip}"
 
+  Rack::Attack.safelist('allow from safe ips') do |req|
+    ENV.fetch('SAFE_IPS', '').include? req.ip
+  end
+
   throttle('req/ip', limit: ENV.fetch('RACK_ATTACK_LIMIT', '3000').to_i, period: 1.minute, &:ip)
 
   ###-----------------------------------------------###
