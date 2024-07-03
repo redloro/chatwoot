@@ -36,6 +36,7 @@ useKeyboardEvents(keyboardEvents, addNoteRef);
       class="input--note"
       :placeholder="$t('NOTES.ADD.PLACEHOLDER')"
       :enable-suggestions="false"
+      :show-image-resize-toolbar="true"
     />
     <div class="flex justify-end w-full">
       <woot-button
@@ -59,6 +60,10 @@ useKeyboardEvents(keyboardEvents, addNoteRef);
 
   &::v-deep .ProseMirror-woot-style {
     max-height: 22.5rem;
+
+    img {
+      @apply inline-block align-bottom;
+    }
   }
 }
 </style>

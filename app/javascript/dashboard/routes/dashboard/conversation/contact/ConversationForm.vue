@@ -438,9 +438,11 @@ export default {
                 class="message-editor"
                 :class="{ editor_warning: v$.message.$error }"
                 enable-variables
+                :replace-variables="false"
                 :signature="signatureToApply"
                 allow-signature
                 :placeholder="$t('NEW_CONVERSATION.FORM.MESSAGE.PLACEHOLDER')"
+                :show-image-resize-toolbar="true"
                 @toggle-canned-menu="toggleCannedMenu"
                 @blur="v$.message.$touch"
               >
@@ -563,16 +565,6 @@ export default {
   @apply pt-4 px-8 pb-8;
 }
 
-.message-editor {
-  @apply px-3;
-
-  ::v-deep {
-    .ProseMirror-menubar {
-      @apply rounded-tl-[4px];
-    }
-  }
-}
-
 .file-uploads {
   @apply text-start;
 }
@@ -596,6 +588,22 @@ export default {
 
   .multiselect .multiselect__content .multiselect__option {
     @apply py-0.5 px-1;
+  }
+}
+
+.message-editor {
+  @apply px-3;
+
+  ::v-deep {
+    .ProseMirror-menubar {
+      @apply m-0 rounded-tl-[4px];
+    }
+  }
+}
+
+::v-deep .ProseMirror-woot-style {
+  img {
+    @apply inline-block align-bottom;
   }
 }
 </style>

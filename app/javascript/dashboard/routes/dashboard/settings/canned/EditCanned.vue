@@ -90,9 +90,9 @@ export default {
 
 <template>
   <Modal :show.sync="show" :on-close="onClose">
-    <div class="flex flex-col h-auto overflow-auto">
+    <div class="h-auto">
       <woot-modal-header :header-title="pageTitle" />
-      <form class="flex flex-col w-full" @submit.prevent="editCannedResponse()">
+      <form class="flex flex-col w-full" @submit.prevent>
         <div class="w-full">
           <label :class="{ error: v$.shortCode.$error }">
             {{ $t('CANNED_MGMT.EDIT.FORM.SHORT_CODE.LABEL') }}
@@ -117,6 +117,7 @@ export default {
               enable-variables
               :enable-canned-responses="false"
               :placeholder="$t('CANNED_MGMT.EDIT.FORM.CONTENT.PLACEHOLDER')"
+              :show-image-resize-toolbar="true"
               @blur="v$.content.$touch"
             />
           </div>
@@ -130,6 +131,7 @@ export default {
             "
             :button-text="$t('CANNED_MGMT.EDIT.FORM.SUBMIT')"
             :loading="editCanned.showLoading"
+            @click="editCannedResponse"
           />
           <button class="button clear" @click.prevent="onClose">
             {{ $t('CANNED_MGMT.EDIT.CANCEL_BUTTON_TEXT') }}
@@ -141,17 +143,15 @@ export default {
 </template>
 
 <style scoped lang="scss">
-::v-deep {
-  .ProseMirror-menubar {
-    @apply hidden;
-  }
+::v-deep .ProseMirror-woot-style {
+  @apply min-h-[15rem];
 
-  .ProseMirror-woot-style {
-    @apply min-h-[12.5rem];
-
-    p {
-      @apply text-base;
-    }
+  img {
+    @apply inline-block align-bottom;
   }
+}
+
+::v-deep .ProseMirror-menubar {
+  @apply m-0 rounded-tl-[4px];
 }
 </style>

@@ -45,12 +45,13 @@ export default {
 <!-- eslint-disable vue/no-mutating-props -->
 <template>
   <woot-modal :show.sync="show" :on-close="onCancel">
-    <div class="flex flex-col h-auto overflow-auto">
+    <div class="h-auto">
       <woot-modal-header
         :header-title="$t('NEW_CONVERSATION.TITLE')"
         :header-content="$t('NEW_CONVERSATION.DESC')"
       />
       <ConversationForm
+        class="flex flex-col w-full"
         :contact="contact"
         :on-submit="onSubmit"
         @success="onSuccess"

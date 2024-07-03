@@ -202,7 +202,8 @@ const confirmDeletion = () => {
         </tbody>
       </table>
     </div>
-
+    
+    <!-- Add Agent -->
     <woot-modal :show.sync="showAddPopup" :on-close="hideAddPopup">
       <AddCanned :on-close="hideAddPopup" />
     </woot-modal>

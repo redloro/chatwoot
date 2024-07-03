@@ -99,7 +99,7 @@ export default {
           color-scheme="secondary"
           icon="dismiss"
           variant="clear"
-          class="absolute z-10 ltr:right-2 rtl:left-2 top-2"
+          class="z-10 ltr:float-right rtl:float-left m-2"
           @click="close"
         />
         <slot />
