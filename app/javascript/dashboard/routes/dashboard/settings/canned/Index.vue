@@ -99,6 +99,7 @@
         <span v-dompurify-html="$t('CANNED_MGMT.SIDEBAR_TXT')" />
       </div>
     </div>
+    
     <!-- Add Agent -->
     <woot-modal :show.sync="showAddPopup" :on-close="hideAddPopup">
       <add-canned :on-close="hideAddPopup" />

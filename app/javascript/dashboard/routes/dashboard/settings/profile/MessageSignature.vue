@@ -48,3 +48,11 @@ const updateSignature = () => {
   emit('update-signature', signature.value);
 };
 </script>
+
+<style lang="scss" scoped>
+::v-deep .ProseMirror-woot-style {
+  img {
+    @apply inline-block align-bottom;
+  }
+}
+</style>

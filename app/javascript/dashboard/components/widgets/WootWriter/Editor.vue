@@ -129,6 +129,7 @@ export default {
     overrideLineBreaks: { type: Boolean, default: false },
     updateSelectionWith: { type: String, default: '' },
     enableVariables: { type: Boolean, default: false },
+    replaceVariables: { type: Boolean, default: true },
     enableCannedResponses: { type: Boolean, default: true },
     variables: { type: Object, default: () => ({}) },
     enabledMenuOptions: { type: Array, default: () => [] },
@@ -566,10 +567,10 @@ export default {
       return false;
     },
     insertCannedResponse(cannedItem) {
-      const updatedMessage = replaceVariablesInMessage({
-        message: cannedItem,
-        variables: this.variables,
-      });
+      const updatedMessage = 
+        this.replaceVariables
+          ? replaceVariablesInMessage({ message: cannedItem, variables: this.variables })
+          : cannedItem;
 
       if (!this.editorView) {
         return null;
@@ -629,11 +630,6 @@ export default {
         if (fileUrl) {
           this.onImageInsertInEditor(fileUrl);
         }
-        this.showAlert(
-          this.$t(
-            'PROFILE_SETTINGS.FORM.MESSAGE_SIGNATURE_SECTION.IMAGE_UPLOAD_SUCCESS'
-          )
-        );
       } catch (error) {
         this.showAlert(
           this.$t(
