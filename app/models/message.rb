@@ -126,8 +126,8 @@ class Message < ApplicationRecord
   has_one :csat_survey_response, dependent: :destroy_async
   has_many :notifications, as: :primary_actor, dependent: :destroy_async
 
+  # TODO: These should be skipped if importing messages
   after_create_commit :execute_after_create_commit_callbacks
-
   after_update_commit :dispatch_update_event
 
   def channel_token
