@@ -1,9 +1,16 @@
 import {
   messageSchema,
   MessageMarkdownTransformer,
-  MessageMarkdownSerializer,
 } from '@chatwoot/prosemirror-schema';
 import * as Sentry from '@sentry/browser';
+import { MarkdownSerializer } from './serializer';
+
+/**
+ * Markdown serializers.
+ * @type {string}
+ */
+export const ArticleMarkdownSerializer = MarkdownSerializer;
+export const MessageMarkdownSerializer = MarkdownSerializer;
 
 /**
  * The delimiter used to separate the signature from the rest of the body.
