@@ -132,4 +132,10 @@ export default {
     @apply visible;
   }
 }
+
+::v-deep .note__content {
+  img {
+    @apply inline-block align-bottom;
+  }
+}
 </style>
