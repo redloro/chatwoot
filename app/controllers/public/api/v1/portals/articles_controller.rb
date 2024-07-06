@@ -17,7 +17,7 @@ class Public::Api::V1::Portals::ArticlesController < Public::Api::V1::Portals::B
   private
 
   def search_articles
-    @articles = @articles.search(list_params) if list_params.present?
+    @articles = @articles.search_by_status(:published).search(list_params) if list_params.present?
   end
 
   def order_by_sort_param
@@ -29,7 +29,9 @@ class Public::Api::V1::Portals::ArticlesController < Public::Api::V1::Portals::B
   end
 
   def set_article
-    @article = @portal.articles.find_by(slug: permitted_params[:article_slug])
+    @article = @portal.articles.search_by_status([:published, :draft]).find_by(slug: permitted_params[:article_slug])
+    render_404 && return if @article.blank?
+
     @article.increment_view_count
     @parsed_content = render_article_content(@article.content)
   end
