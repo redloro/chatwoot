@@ -4,7 +4,6 @@ import {
   buildEditor,
   EditorView,
   MessageMarkdownTransformer,
-  MessageMarkdownSerializer,
   EditorState,
   Selection,
 } from '@chatwoot/prosemirror-schema';
@@ -24,6 +23,7 @@ import {
   scrollCursorIntoView,
   findNodeToInsertImage,
   setURLWithQueryAndSize,
+  MessageMarkdownSerializer,
 } from 'dashboard/helper/editorHelper';
 
 const TYPING_INDICATOR_IDLE_TIME = 4000;

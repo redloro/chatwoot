@@ -3,11 +3,13 @@ import {
   fullSchema,
   buildEditor,
   EditorView,
-  ArticleMarkdownSerializer,
   ArticleMarkdownTransformer,
   EditorState,
   Selection,
 } from '@chatwoot/prosemirror-schema';
+import {
+  ArticleMarkdownSerializer,
+} from 'dashboard/helper/editorHelper';
 import { checkFileSizeLimit } from 'shared/helpers/FileHelper';
 import { useAlert } from 'dashboard/composables';
 import { useUISettings } from 'dashboard/composables/useUISettings';
