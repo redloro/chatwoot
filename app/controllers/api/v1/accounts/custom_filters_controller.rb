@@ -30,7 +30,7 @@ class Api::V1::Accounts::CustomFiltersController < Api::V1::Accounts::BaseContro
     @custom_filters = current_user.custom_filters.where(
       account_id: Current.account.id,
       filter_type: permitted_params[:filter_type] || DEFAULT_FILTER_TYPE
-    )
+    ).order(name: :asc)
   end
 
   def fetch_custom_filter
