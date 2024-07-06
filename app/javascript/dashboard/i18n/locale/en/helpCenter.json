@@ -28,6 +28,7 @@
       "ALL_ARTICLES": "All Articles",
       "PUBLISH_BUTTON": "Publish",
       "MOVE_TO_ARCHIVE_BUTTON": "Move to archived",
+      "MOVE_TO_DRAFT_BUTTON": "Move to draft",
       "PREVIEW": "Preview",
       "ADD_TRANSLATION": "Add translation",
       "OPEN_SIDEBAR": "Open sidebar",
@@ -346,6 +347,12 @@
       "API": {
         "ERROR": "Error while archiving article",
         "SUCCESS": "Article archived successfully"
+      }
+    },
+    "DRAFT_ARTICLE": {
+      "API": {
+        "ERROR": "Error while saving draft article",
+        "SUCCESS": "Draft article saved successfully"
       }
     },
     "DELETE_ARTICLE": {

@@ -78,6 +78,7 @@ export const PORTALS_EVENTS = Object.freeze({
   CREATE_ARTICLE: 'Created an article',
   PUBLISH_ARTICLE: 'Published an article',
   ARCHIVE_ARTICLE: 'Archived an article',
+  DRAFT_ARTICLE: 'Drafted an article',
   DELETE_ARTICLE: 'Deleted an article',
   PREVIEW_ARTICLE: 'Previewed article',
 });

@@ -56,6 +56,9 @@ export default {
     isArchivedArticle() {
       return this.currentArticleStatus === 'archived';
     },
+    isDraftArticle() {
+      return this.currentArticleStatus === 'draft';
+    },
   },
   methods: {
     onClickGoBack() {
@@ -77,10 +80,12 @@ export default {
         this.$emit('updateMeta');
         this.statusUpdateSuccessMessage(status);
         this.closeActionsDropdown();
-        if (status === this.ARTICLE_STATUS_TYPES.ARCHIVE) {
-          this.$track(PORTALS_EVENTS.ARCHIVE_ARTICLE, { uiFrom: 'header' });
-        } else if (status === this.ARTICLE_STATUS_TYPES.PUBLISH) {
+        if (status === this.ARTICLE_STATUS_TYPES.PUBLISH) {
           this.$track(PORTALS_EVENTS.PUBLISH_ARTICLE);
+        } else if (status === this.ARTICLE_STATUS_TYPES.ARCHIVE) {
+          this.$track(PORTALS_EVENTS.ARCHIVE_ARTICLE, { uiFrom: 'header' });
+        } else if (status === this.ARTICLE_STATUS_TYPES.DRAFT) {
+          this.$track(PORTALS_EVENTS.DRAFT_ARTICLE, { uiFrom: 'header' });
         }
       } catch (error) {
         this.alertMessage =
@@ -94,6 +99,8 @@ export default {
         this.alertMessage = this.$t('HELP_CENTER.PUBLISH_ARTICLE.API.SUCCESS');
       } else if (status === this.ARTICLE_STATUS_TYPES.ARCHIVE) {
         this.alertMessage = this.$t('HELP_CENTER.ARCHIVE_ARTICLE.API.SUCCESS');
+      } else if (status === this.ARTICLE_STATUS_TYPES.DRAFT) {
+        this.alertMessage = this.$t('HELP_CENTER.DRAFT_ARTICLE.API.SUCCESS');
       }
     },
     statusUpdateErrorMessage(status) {
@@ -101,6 +108,8 @@ export default {
         this.alertMessage = this.$t('HELP_CENTER.PUBLISH_ARTICLE.API.ERROR');
       } else if (status === this.ARTICLE_STATUS_TYPES.ARCHIVE) {
         this.alertMessage = this.$t('HELP_CENTER.ARCHIVE_ARTICLE.API.ERROR');
+      } else if (status === this.ARTICLE_STATUS_TYPES.DRAFT) {
+        this.alertMessage = this.$t('HELP_CENTER.DRAFT_ARTICLE.API.ERROR');
       }
     },
     openSidebar() {
@@ -199,7 +208,7 @@ export default {
           <woot-button
             size="small"
             icon="chevron-down"
-            :is-disabled="!articleSlug || isArchivedArticle"
+            :is-disabled="!articleSlug"
             @click="openActionsDropdown"
           />
         </div>
@@ -216,8 +225,19 @@ export default {
                 size="small"
                 icon="book-clock"
                 @click="updateArticleStatus(ARTICLE_STATUS_TYPES.ARCHIVE)"
+                v-if="!isArchivedArticle"
               >
                 {{ $t('HELP_CENTER.EDIT_HEADER.MOVE_TO_ARCHIVE_BUTTON') }}
+              </woot-button>
+              <woot-button
+                variant="clear"
+                color-scheme="secondary"
+                size="small"
+                icon="book-compass"
+                @click="updateArticleStatus(ARTICLE_STATUS_TYPES.DRAFT)"
+                v-if="!isDraftArticle"
+              >
+                {{ $t('HELP_CENTER.EDIT_HEADER.MOVE_TO_DRAFT_BUTTON') }}
               </woot-button>
             </woot-dropdown-item>
           </woot-dropdown-menu>
