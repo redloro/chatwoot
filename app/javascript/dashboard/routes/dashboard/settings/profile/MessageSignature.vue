@@ -1,5 +1,5 @@
 <template>
-  <form class="flex flex-col gap-6" @submit.prevent="updateSignature()">
+  <form class="flex flex-col gap-6" @submit.prevent>
     <woot-message-editor
       id="message-signature-input"
       v-model="signature"
@@ -15,6 +15,7 @@
       color-scheme="primary"
       variant="solid"
       size="large"
+      @click="updateSignature"
     >
       {{ $t('PROFILE_SETTINGS.FORM.MESSAGE_SIGNATURE_SECTION.BTN_TEXT') }}
     </form-button>
