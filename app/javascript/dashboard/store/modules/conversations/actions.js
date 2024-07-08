@@ -251,6 +251,20 @@ const actions = {
     }
   },
 
+  deleteConversation: async (
+    { commit },
+    { conversationId }
+  ) => {
+    try {
+      const { data } = await ConversationApi.deleteConversation({
+        conversationId,
+      });
+      commit(types.DELETE_CONVERSATION, data);
+    } catch (error) {
+      // Handle error
+    }
+  },
+
   createPendingMessageAndSend: async ({ dispatch }, data) => {
     const pendingMessage = createPendingMessage(data);
     dispatch('sendMessageWithData', pendingMessage);
