@@ -125,6 +125,32 @@
           />
         </div>
       </div>
+      <div
+        class="max-w-[400px] min-w-[150px] flex items-center relative mx-2 search-wrap"
+      >
+        <div class="flex items-center absolute h-full left-2.5">
+          <fluent-icon
+            icon="search"
+            class="h-5 text-sm leading-9 text-slate-700 dark:text-slate-200"
+          />
+        </div>
+        <input
+          type="text"
+          :placeholder="$t('HELP_CENTER.HEADER.SEARCH_INPUT_PLACEHOLDER')"
+          class="article-search border-slate-100 dark:border-slate-600"
+          :value="searchQuery"
+          @keyup.enter="submitSearch"
+          @input="inputSearch"
+        />
+        <woot-button
+          :is-loading="false"
+          class="clear"
+          :class-names="searchButtonClass"
+          @click="submitSearch"
+        >
+          {{ $t('HELP_CENTER.HEADER.SEARCH_BUTTON') }}
+        </woot-button>
+      </div>
       <woot-button
         size="small"
         icon="add"
@@ -175,6 +201,10 @@ export default {
       type: Array,
       default: () => [],
     },
+    searchQuery: {
+      type: String,
+      default: '',
+    },
   },
   data() {
     return {
@@ -190,6 +220,9 @@ export default {
       return this.allLocales.filter(
         locale => locale.name !== this.selectedLocale
       );
+    },
+    searchButtonClass() {
+      return this.searchQuery !== '' ? 'show' : '';
     },
   },
   methods: {
@@ -221,6 +254,12 @@ export default {
       }
       this.$emit('change-locale', code);
     },
+    submitSearch() {
+      this.$emit('on-search-submit');
+    },
+    inputSearch(event) {
+      this.$emit('on-input-search', event);
+    },
   },
 };
 </script>
@@ -232,5 +271,20 @@ export default {
 
 .dropdown-arrow {
   @apply ml-1 rtl:ml-0 rtl:mr-1;
+}
+
+.search-wrap {
+  .article-search {
+    @apply pl-9 pr-[3.75rem] text-sm w-full h-[2.375rem] m-0;
+  }
+
+  .button {
+    transition: transform 100ms linear;
+    @apply ml-2 h-8 right-1 absolute py-0 px-2 opacity-0 -translate-x-px invisible;
+  }
+
+  .button.show {
+    @apply opacity-100 translate-x-0 visible;
+  }
 }
 </style>

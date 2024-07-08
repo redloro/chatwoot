@@ -54,10 +54,10 @@
             variant="clear"
             color-scheme="secondary"
             size="small"
-            icon="snooze"
-            @click="() => openSnoozeModal()"
+            icon="book-clock"
+            @click="() => toggleStatus(STATUS_TYPE.PENDING)"
           >
-            {{ $t('CONVERSATION.RESOLVE_DROPDOWN.SNOOZE_UNTIL') }}
+            {{ $t('CONVERSATION.RESOLVE_DROPDOWN.MARK_PENDING') }}
           </woot-button>
         </woot-dropdown-item>
         <woot-dropdown-item v-if="!isPending">
@@ -65,14 +65,35 @@
             variant="clear"
             color-scheme="secondary"
             size="small"
-            icon="book-clock"
-            @click="() => toggleStatus(STATUS_TYPE.PENDING)"
+            icon="snooze"
+            @click="() => openSnoozeModal()"
           >
-            {{ $t('CONVERSATION.RESOLVE_DROPDOWN.MARK_PENDING') }}
+            {{ $t('CONVERSATION.RESOLVE_DROPDOWN.SNOOZE_UNTIL') }}
+          </woot-button>
+        </woot-dropdown-item>
+        <woot-dropdown-item>
+          <woot-button
+            variant="clear"
+            color-scheme="alert"
+            size="small"
+            icon="delete"
+            @click="toggleDeleteModal"
+          >
+            {{ $t('CONVERSATION.RESOLVE_DROPDOWN.DELETE') }}
           </woot-button>
         </woot-dropdown-item>
       </woot-dropdown-menu>
     </div>
+    <woot-delete-modal
+      v-if="showDeleteModal"
+      :show.sync="showDeleteModal"
+      :on-close="closeDelete"
+      :on-confirm="confirmDeletion"
+      :title="$t('DELETE_CONVERSATION.CONFIRM.TITLE')"
+      :message="$t('DELETE_CONVERSATION.CONFIRM.MESSAGE')"
+      :confirm-text="$t('DELETE_CONVERSATION.CONFIRM.YES')"
+      :reject-text="$t('DELETE_CONVERSATION.CONFIRM.NO')"
+    />
   </div>
 </template>
 
@@ -88,6 +109,11 @@ import {
   CMD_REOPEN_CONVERSATION,
   CMD_RESOLVE_CONVERSATION,
 } from '../../routes/dashboard/commands/commandBarBusEvents';
+import {
+  isAConversationRoute,
+  isAInboxViewRoute,
+  getConversationDashboardRoute,
+} from '../../helper/routeHelpers';
 
 export default {
   components: {
@@ -100,6 +126,7 @@ export default {
     return {
       isLoading: false,
       showActionsDropdown: false,
+      showDeleteModal: false,
       STATUS_TYPE: wootConstants.STATUS_TYPE,
     };
   },
@@ -216,6 +243,41 @@ export default {
     openSnoozeModal() {
       const ninja = document.querySelector('ninja-keys');
       ninja.open({ parent: 'snooze_conversation' });
+    },
+    toggleDeleteModal() {
+      this.showDeleteModal = !this.showDeleteModal;
+    },
+    confirmDeletion() {
+      this.deleteConversation(this.currentChat);
+      this.closeDelete();
+    },
+    closeDelete() {
+      this.showDeleteModal = false;
+    },
+    deleteConversation({ id }) {
+      this.closeDropdown();
+      this.isLoading = true;
+      this.$store
+        .dispatch('deleteConversation', {
+          conversationId: id,
+        })
+        .then(() => {
+          this.showAlert(this.$t('CONVERSATION.DELETE'));
+          this.isLoading = false;
+          if (isAConversationRoute(this.$route.name)) {
+            this.$router.push({
+            name: getConversationDashboardRoute(this.$route.name),
+            });
+          } else if (isAInboxViewRoute(this.$route.name)) {
+            this.$router.push({
+              name: 'inbox_view',
+            });
+          } else if (this.$route.name !== 'contacts_dashboard') {
+            this.$router.push({
+              name: 'contacts_dashboard',
+            });
+          }
+        });
     },
   },
 };
