@@ -41,10 +41,10 @@ export const actions = {
     }
   },
 
-  get: async function getLabels({ commit }) {
+  get: async function getLabels({ commit }, params) {
     commit(types.SET_LABEL_UI_FLAG, { isFetching: true });
     try {
-      const response = await LabelsAPI.get(true);
+      const response = await LabelsAPI.get({ cache: true, ...params });
       const sortedLabels = response.data.payload.sort((a, b) =>
         a.title.localeCompare(b.title)
       );

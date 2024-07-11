@@ -4,3 +4,8 @@ json.description resource.description
 json.allow_auto_assign resource.allow_auto_assign
 json.account_id resource.account_id
 json.is_member Current.user.teams.include?(resource)
+
+## Meta
+if resource.meta?
+  json.meta resource.meta
+end

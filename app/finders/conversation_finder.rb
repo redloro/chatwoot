@@ -38,6 +38,7 @@ class ConversationFinder
   def perform
     set_up
 
+    conversation_count, mentioned_count, unattended_count, = count_all_open_conversations
     mine_count, unassigned_count, all_count, = set_count_for_all_conversations
     assigned_count = all_count - unassigned_count
 
@@ -49,9 +50,52 @@ class ConversationFinder
         mine_count: mine_count,
         assigned_count: assigned_count,
         unassigned_count: unassigned_count,
-        all_count: all_count
+        all_count: all_count,
+        conversation_count: conversation_count,
+        mentioned_count: mentioned_count,
+        unattended_count: unattended_count,
       }
     }
+  end
+
+  def count_all_open_conversations
+    open_conversations = current_account.conversations.
+      where(inbox_id: @current_user.assigned_inboxes.pluck(:id)).
+      where(status: 'open')
+
+    [
+      open_conversations.count,
+      open_conversations.mentioned(current_user).count,
+      open_conversations.unattended.count,
+    ]
+  end
+
+  def count_inbox
+    set_inboxes
+    find_all_conversations
+    filter_by_status
+    @conversations.count
+  end
+
+  def count_label
+    set_inboxes
+    find_all_conversations
+    filter_by_status
+    filter_by_labels
+    @conversations.count
+  end
+
+  def count_team
+    set_inboxes
+    set_team
+    find_all_conversations
+    filter_by_status
+    filter_by_team
+    @conversations.count
+  end
+
+  def count_custom_filter
+    ::Conversations::FilterService.new(params[:query].with_indifferent_access, current_user).count
   end
 
   private
@@ -106,8 +150,7 @@ class ConversationFinder
   def filter_by_conversation_type
     case @params[:conversation_type]
     when 'mention'
-      conversation_ids = current_account.mentions.where(user: current_user).pluck(:conversation_id)
-      @conversations = @conversations.where(id: conversation_ids)
+      @conversations = @conversations.mentioned(current_user)
     when 'participating'
       @conversations = current_user.participating_conversations.where(account_id: current_account.id)
     when 'unattended'
@@ -155,7 +198,9 @@ class ConversationFinder
     [
       @conversations.assigned_to(current_user).count,
       @conversations.unassigned.count,
-      @conversations.count
+      @conversations.count,
+      @conversations.mentioned(current_user).count,
+      @conversations.unattended.count,
     ]
   end
 

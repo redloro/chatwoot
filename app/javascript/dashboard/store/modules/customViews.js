@@ -28,11 +28,11 @@ export const getters = {
 };
 
 export const actions = {
-  get: async function getCustomViews({ commit }, filterType) {
+  get: async function getCustomViews({ commit }, params) {
     commit(types.SET_CUSTOM_VIEW_UI_FLAG, { isFetching: true });
     try {
       const response =
-        await CustomViewsAPI.getCustomViewsByFilterType(filterType);
+        await CustomViewsAPI.getCustomViewsByFilterType(params);
       commit(types.SET_CUSTOM_VIEW, response.data);
     } catch (error) {
       // Ignore error

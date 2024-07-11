@@ -7,6 +7,8 @@ class Conversations::FilterService < FilterService
   end
 
   def perform
+    conversation_count, mentioned_count, unattended_count, = count_all_open_conversations
+
     @conversations = query_builder(@filters['conversations'])
     mine_count, unassigned_count, all_count, = set_count_for_all_conversations
     assigned_count = all_count - unassigned_count
@@ -17,9 +19,17 @@ class Conversations::FilterService < FilterService
         mine_count: mine_count,
         assigned_count: assigned_count,
         unassigned_count: unassigned_count,
-        all_count: all_count
+        all_count: all_count,
+        conversation_count: conversation_count,
+        mentioned_count: mentioned_count,
+        unattended_count: unattended_count,
       }
     }
+  end
+
+  def count
+    @conversations = query_builder(@filters['conversations'])
+    @conversations.count
   end
 
   def base_relation

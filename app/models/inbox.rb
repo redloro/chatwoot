@@ -44,6 +44,8 @@ class Inbox < ApplicationRecord
   include OutOfOffisable
   include AccountCacheRevalidator
 
+  attribute :meta, :jsonb
+  
   # Not allowing characters:
   validates :name, presence: true
   validates :name, if: :check_channel_type?, format: { with: %r{^^\b[^/\\<>@]*\b$}, multiline: true,

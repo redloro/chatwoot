@@ -3,13 +3,18 @@ import types from '../mutation-types';
 import ConversationApi from '../../api/inbox/conversation';
 
 const state = {
-  mineCount: 0,
-  unAssignedCount: 0,
-  allCount: 0,
+  meta: {
+    mineCount: 0,
+    unAssignedCount: 0,
+    allCount: 0,
+    conversationCount: 0,
+    mentionedCount: 0,
+    unattendedCount: 0,
+  }
 };
 
 export const getters = {
-  getStats: $state => $state,
+  getStats: $state => $state.meta,
 };
 
 export const actions = {
@@ -30,17 +35,15 @@ export const actions = {
 };
 
 export const mutations = {
-  [types.SET_CONV_TAB_META](
-    $state,
-    {
-      mine_count: mineCount,
-      unassigned_count: unAssignedCount,
-      all_count: allCount,
-    } = {}
-  ) {
-    Vue.set($state, 'mineCount', mineCount);
-    Vue.set($state, 'allCount', allCount);
-    Vue.set($state, 'unAssignedCount', unAssignedCount);
+  [types.SET_CONV_TAB_META]($state, meta) {
+    $state.meta = {
+      mineCount: meta.mine_count,
+      unAssignedCount: meta.unassigned_count,
+      allCount: meta.all_count,
+      conversationCount: meta.conversation_count,
+      mentionedCount: meta.mentioned_count,
+      unattendedCount: meta.unattended_count,
+    };
   },
 };
 
