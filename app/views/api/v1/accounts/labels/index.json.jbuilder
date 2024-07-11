@@ -5,5 +5,11 @@ json.payload do
     json.description label.description
     json.color label.color
     json.show_on_sidebar label.show_on_sidebar
+
+    ## Meta
+    if label.meta?
+      json.meta label.meta
+    end
+
   end
 end

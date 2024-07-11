@@ -11,7 +11,7 @@
     >
       <secondary-nav-item
         v-for="menuItem in accessibleMenuItems"
-        :key="menuItem.toState"
+        :key="menuItem.toState+':'+menuItem.count"
         :menu-item="menuItem"
       />
       <secondary-nav-item
@@ -72,6 +72,7 @@ export default {
   computed: {
     ...mapGetters({
       isFeatureEnabledonAccount: 'accounts/isFeatureEnabledonAccount',
+      conversationStats: 'conversationStats/getStats',
     }),
     hasSecondaryMenu() {
       return this.menuConfig.menuItems && this.menuConfig.menuItems.length;
@@ -94,6 +95,11 @@ export default {
           return this.isOnChatwootCloud;
         }
         return true;
+      }).map(item => {
+        if (item.key === 'conversations') item.count = this.conversationStats['conversationCount'];
+        if (item.key === 'conversation_mentions') item.count = this.conversationStats['mentionedCount'];
+        if (item.key === 'conversation_unattended') item.count = this.conversationStats['unattendedCount'];
+        return item;
       });
     },
     inboxSection() {
@@ -118,6 +124,7 @@ export default {
             type: inbox.channel_type,
             phoneNumber: inbox.phone_number,
             reauthorizationRequired: inbox.reauthorization_required,
+            count: inbox.meta ? inbox.meta.count : null
           }))
           .sort((a, b) =>
             a.label.toLowerCase() > b.label.toLowerCase() ? 1 : -1
@@ -142,9 +149,8 @@ export default {
           label: label.title,
           color: label.color,
           truncateLabel: true,
-          toState: frontendURL(
-            `accounts/${this.accountId}/label/${label.title}`
-          ),
+          toState: frontendURL(`accounts/${this.accountId}/label/${label.title}`),
+          count: label.meta ? label.meta.count : null
         })),
       };
     },
@@ -165,9 +171,7 @@ export default {
           label: label.title,
           color: label.color,
           truncateLabel: true,
-          toState: frontendURL(
-            `accounts/${this.accountId}/labels/${label.title}/contacts`
-          ),
+          toState: frontendURL(`accounts/${this.accountId}/labels/${label.title}/contacts`),
         })),
       };
     },
@@ -187,6 +191,7 @@ export default {
           label: team.name,
           truncateLabel: true,
           toState: frontendURL(`accounts/${this.accountId}/team/${team.id}`),
+          count: team.meta ? team.meta.count : null
         })),
       };
     },
@@ -202,9 +207,8 @@ export default {
             id: view.id,
             label: view.name,
             truncateLabel: true,
-            toState: frontendURL(
-              `accounts/${this.accountId}/custom_view/${view.id}`
-            ),
+            toState: frontendURL(`accounts/${this.accountId}/custom_view/${view.id}`),
+            count: view.meta ? view.meta.count : null
           })),
       };
     },

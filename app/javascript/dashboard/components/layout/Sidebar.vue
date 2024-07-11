@@ -145,18 +145,22 @@ export default {
     },
   },
   mounted() {
-    this.$store.dispatch('labels/get');
-    this.$store.dispatch('inboxes/get');
-    this.$store.dispatch('notifications/unReadCount');
-    this.$store.dispatch('teams/get');
     this.$store.dispatch('attributes/get');
+    this.$store.dispatch('notifications/unReadCount');
+    this.$store.dispatch('inboxes/get', this.addMetaParam());
+    this.$store.dispatch('labels/get', this.addMetaParam());
+    this.$store.dispatch('teams/get', this.addMetaParam());
     this.fetchCustomViews();
   },
 
   methods: {
+    addMetaParam() {
+      if (this.activePrimaryMenu.key !== 'conversations') return;
+      return {  cache: false, meta: true };
+    },
     fetchCustomViews() {
       if (this.isConversationOrContactActive) {
-        this.$store.dispatch('customViews/get', this.activeCustomView);
+        this.$store.dispatch('customViews/get', { filter_type: this.activeCustomView, meta: 'true' });
       }
     },
     toggleKeyShortcutModal() {

@@ -13,16 +13,16 @@ class CacheEnabledApiClient extends ApiClient {
     throw new Error('cacheModelName is not defined');
   }
 
-  get(cache = false) {
-    if (cache) {
+  get(params = {}) {
+    if (params.cache) {
       return this.getFromCache();
     }
 
-    return this.getFromNetwork();
+    return this.getFromNetwork(params);
   }
 
-  getFromNetwork() {
-    return axios.get(this.url);
+  getFromNetwork(params = {}) {
+    return axios.get(this.url, { params });
   }
 
   // eslint-disable-next-line class-methods-use-this

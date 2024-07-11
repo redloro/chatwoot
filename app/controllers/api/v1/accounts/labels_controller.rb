@@ -5,6 +5,7 @@ class Api::V1::Accounts::LabelsController < Api::V1::Accounts::BaseController
 
   def index
     @labels = policy_scope(Current.account.labels)
+    add_meta
   end
 
   def show; end
@@ -30,5 +31,16 @@ class Api::V1::Accounts::LabelsController < Api::V1::Accounts::BaseController
 
   def permitted_params
     params.require(:label).permit(:title, :description, :color, :show_on_sidebar)
+  end
+
+  def add_meta
+    return @labels unless params[:meta].presence
+    @labels.each do |label|
+      label[:meta] = { :count => 0 }
+      label[:meta][:count] = ConversationFinder.new(Current.user, {
+        :labels => label[:title], 
+        :status => "open"
+      }).count_label
+    end
   end
 end
