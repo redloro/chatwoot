@@ -101,6 +101,18 @@ class FilterService
     lt_gt_filter_values(query_hash)
   end
 
+  def count_all_open_conversations
+    open_conversations = @account.conversations.
+      where(inbox_id: @user.assigned_inboxes.pluck(:id)).
+      where(status: 'open')
+
+    [
+      open_conversations.count,
+      open_conversations.mentioned(@user).count,
+      open_conversations.unattended.count,
+    ]
+  end
+
   def set_count_for_all_conversations
     [
       @conversations.assigned_to(@user).count,

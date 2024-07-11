@@ -20,6 +20,7 @@ class Label < ApplicationRecord
   include RegexHelper
   include AccountCacheRevalidator
 
+  attribute :meta, :jsonb
   belongs_to :account
 
   validates :title,

@@ -19,16 +19,18 @@
     </div>
     <router-link
       v-else
-      class="flex items-center p-2 m-0 text-sm font-medium leading-4 rounded-lg text-slate-700 dark:text-slate-100 hover:bg-slate-25 dark:hover:bg-slate-800"
+      class="flex justify-between items-center p-2 m-0 text-sm font-medium leading-4 rounded-lg text-slate-700 dark:text-slate-100 hover:bg-slate-25 dark:hover:bg-slate-800"
       :class="computedClass"
       :to="menuItem && menuItem.toState"
     >
-      <fluent-icon
-        :icon="menuItem.icon"
-        class="min-w-[1rem] mr-1.5 rtl:mr-0 rtl:ml-1.5"
-        size="14"
-      />
-      {{ $t(`SIDEBAR.${menuItem.label}`) }}
+      <span class="flex items-center">
+        <fluent-icon
+          :icon="menuItem.icon"
+          class="min-w-[1rem] mr-1.5 rtl:mr-0 rtl:ml-1.5"
+          size="14"
+        />
+        {{ $t(`SIDEBAR.${menuItem.label}`) }}
+      </span>
       <span
         v-if="showChildCount(menuItem.count)"
         class="px-1 py-0 mx-1 font-medium rounded-md text-xxs"

@@ -18,6 +18,7 @@
 class Team < ApplicationRecord
   include AccountCacheRevalidator
 
+  attribute :meta, :jsonb
   belongs_to :account
   has_many :team_members, dependent: :destroy_async
   has_many :members, through: :team_members, source: :user

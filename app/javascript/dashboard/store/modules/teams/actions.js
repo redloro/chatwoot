@@ -33,10 +33,10 @@ export const actions = {
       // Ignore error
     }
   },
-  get: async ({ commit }) => {
+  get: async ({ commit }, params) => {
     commit(SET_TEAM_UI_FLAG, { isFetching: true });
     try {
-      const { data } = await TeamsAPI.get(true);
+      const { data } = await TeamsAPI.get({ cache: true, ...params });
       commit(CLEAR_TEAMS);
       commit(SET_TEAMS, data);
     } catch (error) {

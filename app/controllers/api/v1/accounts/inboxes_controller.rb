@@ -8,6 +8,7 @@ class Api::V1::Accounts::InboxesController < Api::V1::Accounts::BaseController
 
   def index
     @inboxes = policy_scope(Current.account.inboxes.order_by_name.includes(:channel, { avatar_attachment: [:blob] }))
+    add_meta
   end
 
   def show; end
@@ -154,6 +155,17 @@ class Api::V1::Accounts::InboxesController < Api::V1::Accounts::BaseController
       channel_type.constantize::EDITABLE_ATTRS.presence
     else
       []
+    end
+  end
+
+  def add_meta
+    return @inboxes unless params[:meta].presence
+    @inboxes.each do |inbox|
+      inbox[:meta] = { :count => 0 }
+      inbox[:meta][:count] = ConversationFinder.new(Current.user, {
+        :inbox_id => inbox[:id], 
+        :status => "open"
+      }).count_inbox
     end
   end
 end
