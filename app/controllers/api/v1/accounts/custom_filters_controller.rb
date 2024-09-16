@@ -30,7 +30,8 @@ class Api::V1::Accounts::CustomFiltersController < Api::V1::Accounts::BaseContro
     @custom_filters = current_user.custom_filters.where(
       account_id: Current.account.id,
       filter_type: permitted_params[:filter_type] || DEFAULT_FILTER_TYPE
-    )
+    ).order(name: :asc)
+    add_meta
   end
 
   def fetch_custom_filter
@@ -47,5 +48,16 @@ class Api::V1::Accounts::CustomFiltersController < Api::V1::Accounts::BaseContro
 
   def permitted_params
     params.permit(:id, :filter_type)
+  end
+
+  def add_meta
+    return @custom_filters unless params[:meta].presence
+    @custom_filters.each do |custom_filter|
+      custom_filter[:meta] = { :count => 0 }
+      custom_filter[:meta][:count] = ConversationFinder.new(Current.user, {
+        :query => custom_filter[:query], 
+        :status => "open"
+      }).count_custom_filter
+    end
   end
 end

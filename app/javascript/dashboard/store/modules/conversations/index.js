@@ -209,6 +209,13 @@ export const mutations = {
     _state.allConversations.push(conversation);
   },
 
+  [types.DELETE_CONVERSATION](_state, conversation) {
+    const chats = _state.allConversations.filter(
+      c => c.id === conversation.id
+    );
+    Vue.set(_state, 'allConversations', chats);
+  },
+
   [types.UPDATE_CONVERSATION](_state, conversation) {
     const { allConversations } = _state;
     const currentConversationIndex = allConversations.findIndex(

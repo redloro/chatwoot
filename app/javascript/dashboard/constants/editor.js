@@ -6,6 +6,7 @@ export const MESSAGE_EDITOR_MENU_OPTIONS = [
   'redo',
   'bulletList',
   'orderedList',
+  'imageUpload',
   'code',
 ];
 
@@ -35,19 +36,23 @@ export const ARTICLE_EDITOR_MENU_OPTIONS = [
 
 export const MESSAGE_EDITOR_IMAGE_RESIZES = [
   {
+    name: 'Tiny',
+    height: '40px',
+  },
+  {
     name: 'Small',
-    height: '24px',
+    height: '160px',
   },
   {
     name: 'Medium',
-    height: '48px',
+    height: '320px',
   },
   {
     name: 'Large',
-    height: '72px',
+    height: '640px',
   },
   {
-    name: 'Original Size',
+    name: 'Original',
     height: 'auto',
   },
 ];

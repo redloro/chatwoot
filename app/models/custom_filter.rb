@@ -18,6 +18,7 @@
 #
 class CustomFilter < ApplicationRecord
   MAX_FILTER_PER_USER = 50
+  attribute :meta, :jsonb
   belongs_to :user
   belongs_to :account
 

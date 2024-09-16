@@ -74,6 +74,7 @@
       />
       <woot-message-editor
         v-else
+        ref="messageEditorInput"
         v-model="message"
         :editor-id="editorStateId"
         class="input"
@@ -86,6 +87,7 @@
         :signature="signatureToApply"
         :allow-signature="true"
         :channel-type="channelType"
+        :show-image-resize-toolbar="true"
         @typing-off="onTypingOff"
         @typing-on="onTypingOn"
         @focus="onFocus"
@@ -751,6 +753,9 @@ export default {
         isEditorHotKeyEnabled(this.uiSettings, selectedKey)
       );
     },
+    isAttachmentImage(fileType) {
+      return "image/png, image/jpeg, image/jpg, image/gif, image/webp".includes(fileType);
+    },
     onPaste(e) {
       const data = e.clipboardData.files;
       if (!this.showRichContentEditor && data.length !== 0) {
@@ -761,7 +766,11 @@ export default {
       }
       data.forEach(file => {
         const { name, type, size } = file;
-        this.onFileUpload({ name, type, size, file: file });
+        if (this.showRichContentEditor && this.isAttachmentImage(file.type)) {
+          this.$refs.messageEditorInput.uploadImageToStorage(file);
+        } else {
+          this.onFileUpload({ name, type, size, file: file });
+        }
       });
     },
     toggleUserMention(currentMentionState) {
@@ -1169,10 +1178,10 @@ export default {
         cc.push(conversationContact);
       }
 
+      // Remove the original BCC list if present
+      // https://www.rfc-editor.org/rfc/rfc2822#section-3.6.3
       // Remove the conversation contact's email from the BCC list if present
-      let bcc = (emailAttributes.bcc || []).filter(
-        email => email !== conversationContact
-      );
+      let bcc = [];
 
       // Ensure only unique email addresses are in the CC list
       bcc = [...new Set(bcc)];
@@ -1302,5 +1311,11 @@ export default {
 .normal-editor__canned-box {
   width: calc(100% - 2 * var(--space-normal));
   left: var(--space-normal);
+}
+
+::v-deep .ProseMirror-woot-style {
+  img {
+    @apply inline-block align-bottom;
+  }
 }
 </style>

@@ -33,6 +33,25 @@ export const actions = {
     }
   },
 
+  search: async ({ commit }, { pageNumber, portalSlug, query }) => {
+    try {
+      commit(types.SET_UI_FLAG, { isFetching: true });
+      const {
+        data: { payload, meta },
+      } = await articlesAPI.searchArticles({ pageNumber, portalSlug, query });
+      const articleIds = payload.map(article => article.id);
+      commit(types.CLEAR_ARTICLES);
+      commit(types.ADD_MANY_ARTICLES, payload);
+      commit(types.SET_ARTICLES_META, meta);
+      commit(types.ADD_MANY_ARTICLES_ID, articleIds);
+      return articleIds;
+    } catch (error) {
+      return throwErrorMessage(error);
+    } finally {
+      commit(types.SET_UI_FLAG, { isFetching: false });
+    }
+  },
+
   create: async ({ commit, dispatch }, { portalSlug, ...articleObj }) => {
     commit(types.SET_UI_FLAG, { isCreating: true });
     try {

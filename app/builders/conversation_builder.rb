@@ -21,6 +21,7 @@ class ConversationBuilder
     additional_attributes = params[:additional_attributes]&.permit! || {}
     custom_attributes = params[:custom_attributes]&.permit! || {}
     status = params[:status].present? ? { status: params[:status] } : {}
+    created_at = params[:created_at].present? ? { created_at: params[:created_at] } : {}
 
     # TODO: temporary fallback for the old bot status in conversation, we will remove after couple of releases
     # commenting this out to see if there are any errors, if not we can remove this in subsequent releases
@@ -35,6 +36,6 @@ class ConversationBuilder
       snoozed_until: params[:snoozed_until],
       assignee_id: params[:assignee_id],
       team_id: params[:team_id]
-    }.merge(status)
+    }.merge(status).merge(created_at)
   end
 end

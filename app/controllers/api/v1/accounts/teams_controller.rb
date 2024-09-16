@@ -4,6 +4,7 @@ class Api::V1::Accounts::TeamsController < Api::V1::Accounts::BaseController
 
   def index
     @teams = Current.account.teams
+    add_meta
   end
 
   def show; end
@@ -30,5 +31,16 @@ class Api::V1::Accounts::TeamsController < Api::V1::Accounts::BaseController
 
   def team_params
     params.require(:team).permit(:name, :description, :allow_auto_assign)
+  end
+
+  def add_meta
+    return @teams unless params[:meta].presence
+    @teams.each do |team|
+      team[:meta] = { :count => 0 }
+      team[:meta][:count] = ConversationFinder.new(Current.user, {
+        :team_id => team[:id], 
+        :status => "open"
+      }).count_team
+    end
   end
 end

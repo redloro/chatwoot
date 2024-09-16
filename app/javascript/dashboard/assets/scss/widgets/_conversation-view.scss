@@ -258,4 +258,8 @@
   p:last-child {
     @apply mb-0;
   }
+
+  img {
+    @apply inline-block align-bottom;
+  }
 }
