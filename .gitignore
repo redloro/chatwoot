@@ -32,6 +32,11 @@ master.key
 
 public/uploads
 public/packs*
+public/assets/**/*.json
+public/assets/**/*.js
+public/assets/**/*.gz
+public/assets/**/*.css
+public/assets/administrate-field-active_storage
 
 # VIM files
 *.swp
