@@ -160,6 +160,7 @@ export const getConditionOptions = ({
   statusFilterOptions,
   teams,
   type,
+  labels,
 }) => {
   if (isCustomAttributeCheckbox(customAttributes, type)) {
     return booleanFilterOptions;
@@ -181,6 +182,7 @@ export const getConditionOptions = ({
     country_code: countries,
     message_type: MESSAGE_CONDITION_VALUES,
     priority: PRIORITY_CONDITION_VALUES,
+    labels: generateConditionOptions(labels, 'title'),
   };
 
   return conditionFilterMaps[type];

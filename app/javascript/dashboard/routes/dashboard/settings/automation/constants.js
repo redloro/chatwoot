@@ -352,6 +352,13 @@ export const AUTOMATIONS = {
         inputType: 'multi_select',
         filterOperators: OPERATOR_TYPES_1,
       },
+      {
+        key: 'labels',
+        name: 'Labels',
+        attributeI18nKey: 'LABELS',
+        inputType: 'multi_select',
+        filterOperators: OPERATOR_TYPES_1,
+      },
     ],
     actions: [
       {

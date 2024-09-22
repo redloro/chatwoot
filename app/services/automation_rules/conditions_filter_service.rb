@@ -108,6 +108,13 @@ class AutomationRules::ConditionsFilterService < FilterService
     end
   end
 
+  def filter_config
+    {
+      entity: 'Conversation',
+      table_name: 'conversations'
+    }
+  end
+
   def message_query_string(current_filter, query_hash, current_index)
     attribute_key = query_hash['attribute_key']
     query_operator = query_hash['query_operator']
@@ -148,13 +155,9 @@ class AutomationRules::ConditionsFilterService < FilterService
 
     case current_filter['attribute_type']
     when 'additional_attributes'
-      " #{table_name}.additional_attributes ->> '#{attribute_key}' #{filter_operator_value} #{query_operator} "
-    when 'standard'
-      if attribute_key == 'labels'
-        " tags.id #{filter_operator_value} #{query_operator} "
-      else
-        " #{table_name}.#{attribute_key} #{filter_operator_value} #{query_operator} "
-      end
+      handle_additional_attributes(query_hash, filter_operator_value, current_filter['data_type'])
+    else
+      handle_standard_attributes(current_filter, query_hash, current_index, filter_operator_value)
     end
   end
 

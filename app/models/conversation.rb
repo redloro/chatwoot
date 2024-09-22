@@ -300,7 +300,8 @@ class Conversation < ApplicationRecord
     previous_labels, current_labels = previous_changes[:label_list]
     return unless (previous_labels.is_a? Array) && (current_labels.is_a? Array)
 
-    dispatcher_dispatch(CONVERSATION_UPDATED, previous_changes)
+    #09/22/2024 - remove duplicate dispatch
+    #dispatcher_dispatch(CONVERSATION_UPDATED, previous_changes)
 
     create_label_added(user_name, current_labels - previous_labels)
     create_label_removed(user_name, previous_labels - current_labels)
