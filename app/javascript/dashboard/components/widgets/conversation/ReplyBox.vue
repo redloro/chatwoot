@@ -1032,10 +1032,10 @@ export default {
         cc.push(conversationContact);
       }
 
+      // Remove the original BCC list if present
+      // https://www.rfc-editor.org/rfc/rfc2822#section-3.6.3
       // Remove the conversation contact's email from the BCC list if present
-      let bcc = (emailAttributes.bcc || []).filter(
-        email => email !== conversationContact
-      );
+      let bcc = [];
 
       // Ensure only unique email addresses are in the CC list
       bcc = [...new Set(bcc)];

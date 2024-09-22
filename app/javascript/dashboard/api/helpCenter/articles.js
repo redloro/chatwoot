@@ -31,8 +31,9 @@ class ArticlesAPI extends PortalsAPI {
     return axios.get(url);
   }
 
-  searchArticles({ portalSlug, query }) {
+  searchArticles({ pageNumber, portalSlug, query }) {
     const url = getArticleSearchURL({
+      pageNumber,
       portalSlug,
       query,
       host: this.url,

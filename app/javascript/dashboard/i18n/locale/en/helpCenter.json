@@ -6,6 +6,8 @@
       "LOCALE": "Locale",
       "SETTINGS_BUTTON": "Settings",
       "NEW_BUTTON": "New Article",
+      "SEARCH_BUTTON": "Search",
+      "SEARCH_INPUT_PLACEHOLDER": "Search for articles",
       "DROPDOWN_OPTIONS": {
         "PUBLISHED": "Published",
         "DRAFT": "Draft",

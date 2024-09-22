@@ -49,6 +49,10 @@ class ConversationApi extends ApiClient {
     });
   }
 
+  deleteConversation({ conversationId }) {
+    return axios.delete(`${this.url}/${conversationId}`);
+  }
+
   toggleStatus({ conversationId, status, snoozedUntil = null }) {
     return axios.post(`${this.url}/${conversationId}/toggle_status`, {
       status,

@@ -3,6 +3,7 @@ import { ref, computed } from 'vue';
 import { useAlert } from 'dashboard/composables';
 import { useToggle } from '@vueuse/core';
 import { useI18n } from 'dashboard/composables/useI18n';
+import { useRoute, useRouter } from 'dashboard/composables/route';
 import { useStore, useStoreGetters } from 'dashboard/composables/store';
 import { useEmitter } from 'dashboard/composables/emitter';
 import { useKeyboardEvents } from 'dashboard/composables/useKeyboardEvents';
@@ -14,14 +15,22 @@ import {
   CMD_REOPEN_CONVERSATION,
   CMD_RESOLVE_CONVERSATION,
 } from 'dashboard/routes/dashboard/commands/commandBarBusEvents';
+import {
+  isAConversationRoute,
+  isAInboxViewRoute,
+  getConversationDashboardRoute,
+} from 'dashboard/helper/routeHelpers';
 
 const store = useStore();
 const getters = useStoreGetters();
 const { t } = useI18n();
+const route = useRoute();
+const router = useRouter();
 
 const resolveActionsRef = ref(null);
 const arrowDownButtonRef = ref(null);
 const isLoading = ref(false);
+const showDeleteConfirmationPopup = ref(false);
 
 const [showActionsDropdown, toggleDropdown] = useToggle();
 const closeDropdown = () => toggleDropdown(false);
@@ -80,6 +89,45 @@ const getConversationParams = () => {
 const openSnoozeModal = () => {
   const ninja = document.querySelector('ninja-keys');
   ninja.open({ parent: 'snooze_conversation' });
+};
+
+const openDeletePopup = response => {
+  showDeleteConfirmationPopup.value = true;
+};
+
+const confirmDeletion = () => {
+  deleteConversation(currentChat.value.id);
+  closeDeletePopup();
+};
+
+const closeDeletePopup = () => {
+  showDeleteConfirmationPopup.value = false;
+};
+
+const deleteConversation = (id) => {
+  closeDeletePopup();
+  isLoading.value = true;
+  store
+    .dispatch('deleteConversation', {
+      conversationId: id,
+    })
+    .then(() => {
+      useAlert(t('CONVERSATION.DELETE'));
+      isLoading.value = false;
+      if (isAConversationRoute(route.name, true)) {
+        router.push({
+          name: getConversationDashboardRoute(route.name),
+        });
+      } else if (isAInboxViewRoute(route.name, true)) {
+        router.push({
+          name: 'inbox_view',
+        });
+      } else if (route.name !== 'contacts_dashboard') {
+        router.push({
+          name: 'contacts_dashboard',
+        });
+      }
+    });
 };
 
 const toggleStatus = (status, snoozedUntil) => {
@@ -196,10 +244,10 @@ useEmitter(CMD_RESOLVE_CONVERSATION, onCmdResolveConversation);
             variant="clear"
             color-scheme="secondary"
             size="small"
-            icon="snooze"
-            @click="() => openSnoozeModal()"
+            icon="book-clock"
+            @click="() => toggleStatus(wootConstants.STATUS_TYPE.PENDING)"
           >
-            {{ t('CONVERSATION.RESOLVE_DROPDOWN.SNOOZE_UNTIL') }}
+            {{ $t('CONVERSATION.RESOLVE_DROPDOWN.MARK_PENDING') }}
           </woot-button>
         </WootDropdownItem>
         <WootDropdownItem v-if="!isPending">
@@ -207,14 +255,34 @@ useEmitter(CMD_RESOLVE_CONVERSATION, onCmdResolveConversation);
             variant="clear"
             color-scheme="secondary"
             size="small"
-            icon="book-clock"
-            @click="() => toggleStatus(wootConstants.STATUS_TYPE.PENDING)"
+            icon="snooze"
+            @click="() => openSnoozeModal()"
           >
-            {{ t('CONVERSATION.RESOLVE_DROPDOWN.MARK_PENDING') }}
+            {{ $t('CONVERSATION.RESOLVE_DROPDOWN.SNOOZE_UNTIL') }}
+          </woot-button>
+        </WootDropdownItem>
+        <WootDropdownItem>
+          <woot-button
+            variant="clear"
+            color-scheme="alert"
+            size="small"
+            icon="delete"
+            @click="openDeletePopup()"
+          >
+            {{ t('CONVERSATION.RESOLVE_DROPDOWN.DELETE') }}
           </woot-button>
         </WootDropdownItem>
       </WootDropdownMenu>
     </div>
+    <woot-delete-modal
+      :show.sync="showDeleteConfirmationPopup"
+      :on-close="closeDeletePopup"
+      :on-confirm="confirmDeletion"
+      :title="$t('DELETE_CONVERSATION.CONFIRM.TITLE')"
+      :message="$t('DELETE_CONVERSATION.CONFIRM.MESSAGE')"
+      :confirm-text="$t('DELETE_CONVERSATION.CONFIRM.YES')"
+      :reject-text="$t('DELETE_CONVERSATION.CONFIRM.NO')"
+    />
   </div>
 </template>
 

@@ -17,6 +17,7 @@ export default {
   data() {
     return {
       pageNumber: 1,
+      searchQuery: '',
     };
   },
   computed: {
@@ -122,14 +123,23 @@ export default {
       this.$router.push({ name: 'new_article' });
     },
     fetchArticles({ pageNumber } = {}) {
-      this.$store.dispatch('articles/index', {
+      const value = this.searchQuery;
+      const requestParams = {
         pageNumber: pageNumber || this.pageNumber,
         portalSlug: this.$route.params.portalSlug,
         locale: this.activeLocale,
         status: this.status,
         authorId: this.author,
         categorySlug: this.selectedCategorySlug,
-      });
+      };
+      if (!value) {
+        this.$store.dispatch('articles/index', requestParams);
+      } else {
+        this.$store.dispatch('articles/search', {
+          query: encodeURIComponent(value),
+          ...requestParams,
+        });
+      }
     },
     onPageChange(pageNumber) {
       this.fetchArticles({ pageNumber });
@@ -150,6 +160,22 @@ export default {
       });
       this.$emit('reloadLocale');
     },
+    onInputSearch(event) {
+      const newQuery = event.target.value;
+      const refetchAllContacts = !!this.searchQuery && newQuery === '';
+      this.searchQuery = newQuery;
+      if (refetchAllContacts) {
+        this.pageNumber = 1;
+        this.fetchArticles();
+      }
+    },
+    onSearchSubmit() {
+      this.selectedContactId = '';
+      if (this.searchQuery) {
+        this.pageNumber = 1;
+        this.fetchArticles();
+      }
+    },
   },
 };
 </script>
@@ -163,10 +189,13 @@ export default {
       :count="meta.count"
       :selected-locale="activeLocaleName"
       :all-locales="allowedLocales"
+      :search-query="searchQuery"
       selected-value="Published"
       class="border-b border-slate-50 dark:border-slate-700"
       @newArticlePage="newArticlePage"
       @changeLocale="onChangeLocale"
+      @on-input-search="onInputSearch"
+      @on-search-submit="onSearchSubmit"
     />
     <div
       v-if="isFetching"
