@@ -1,13 +1,15 @@
 <script>
 import PageHeader from '../../SettingsSubPageHeader.vue';
 import BandwidthSms from './BandwidthSms.vue';
+import DialpadSms from './DialpadSms.vue';
 import Twilio from './Twilio.vue';
 
 export default {
   components: {
     PageHeader,
-    Twilio,
     BandwidthSms,
+    DialpadSms,
+    Twilio,
   },
   data() {
     return {
@@ -35,10 +37,14 @@ export default {
           <option value="360dialog">
             {{ $t('INBOX_MGMT.ADD.SMS.PROVIDERS.BANDWIDTH') }}
           </option>
+          <option value="dialpad">
+            {{ $t('INBOX_MGMT.ADD.SMS.PROVIDERS.DIALPAD') }}
+          </option>
         </select>
       </label>
     </div>
     <Twilio v-if="provider === 'twilio'" type="sms" />
+    <DialpadSms v-else-if="provider === 'dialpad'" />
     <BandwidthSms v-else />
   </div>
 </template>
